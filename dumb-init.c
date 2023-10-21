@@ -19,7 +19,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include "VERSION.h"
 
 #define PRINTERR(...) do { \
     fprintf(stderr, "[dumb-init] " __VA_ARGS__); \
@@ -126,8 +125,8 @@ void handle_signal(int signum) {
 
 void print_help(char *argv[]) {
     fprintf(stderr,
-        "dumb-init v%.*s"
-        "Usage: %s [option] command [[arg] ...]\n"
+        "dumb-init"
+        "Usage: [option] command [[arg] ...]\n"
         "\n"
         "dumb-init is a simple process supervisor that forwards signals to children.\n"
         "It is designed to run as PID1 in minimal container environments.\n"
@@ -143,9 +142,7 @@ void print_help(char *argv[]) {
         "   -h, --help           Print this help message and exit.\n"
         "   -V, --version        Print the current version and exit.\n"
         "\n"
-        "Full help is available online at https://github.com/Yelp/dumb-init\n",
-        VERSION_len, VERSION,
-        argv[0]
+        "Full help is available online at https://github.com/Yelp/dumb-init\n"
     );
 }
 
@@ -187,7 +184,6 @@ char **parse_command(int argc, char *argv[]) {
         {"single-child", no_argument,       NULL, 'c'},
         {"rewrite",      required_argument, NULL, 'r'},
         {"verbose",      no_argument,       NULL, 'v'},
-        {"version",      no_argument,       NULL, 'V'},
         {NULL,                     0,       NULL,   0},
     };
     while ((opt = getopt_long(argc, argv, "+hvVcr:", long_options, NULL)) != -1) {
@@ -198,9 +194,6 @@ char **parse_command(int argc, char *argv[]) {
             case 'v':
                 debug = 1;
                 break;
-            case 'V':
-                fprintf(stderr, "dumb-init v%.*s", VERSION_len, VERSION);
-                exit(0);
             case 'c':
                 use_setsid = 0;
                 break;
